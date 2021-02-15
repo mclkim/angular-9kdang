@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { CartService } from "../cart.service";
 @Component({
   selector: "app-cart",
@@ -7,9 +8,25 @@ import { CartService } from "../cart.service";
 })
 export class CartComponent implements OnInit {
   items;
-  constructor(private cartService: CartService) {}
+  checkoutForm;
+  constructor(
+    private cartService: CartService,
+    private formBuilder: FormBuilder
+  ) {
+    this.checkoutForm = this.formBuilder.group({
+      name: "",
+      address: ""
+    });
+  }
 
   ngOnInit() {
     this.items = this.cartService.getItems();
+  }
+  onSubmit(customerData) {
+    // 주문 로직은 여기에 구현합니다.
+    this.items = this.cartService.clearCart();
+    this.checkoutForm.reset();
+
+    console.warn("Your order has been submitted", customerData);
   }
 }
